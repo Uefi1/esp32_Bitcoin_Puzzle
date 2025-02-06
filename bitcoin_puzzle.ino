@@ -1,6 +1,7 @@
-﻿// BitcoinPuzzle by Uefi1
+// BitcoinPuzzle by Uefi1
 // https://github.com/Uefi1/esp32_Bitcoin_Puzzle
 // 2025
+
 
 #include "Bitcoin.h"
 #include <WiFi.h>
