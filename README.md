@@ -12,7 +12,7 @@ How to use the device after flashing:
 
 1. Make sure your device is connected to power or a computer.
 2. Now open Wi-Fi, find the BitcoinPuzzle access point, and connect to it using the default password BitPuzzle, unless you changed the access point and password in the source code.
-3. Next open a browser and go to the address 192.168.4.1. You will land on a page where you can enter the ranges and the address you're looking for in the puzzle. After that, click Start, and your ESP32 will begin working.
+3. Next open a browser and go to the address 192.168.4.1. You will land on a page where you can enter the ranges and the address you're looking for in the puzzle. After that, click Start, and your ESP32 will begin working:
 
 ![Image](https://github.com/user-attachments/assets/9786de5a-ccdd-4d9a-8044-58a96964674c)
 
