@@ -4,9 +4,9 @@ How To
 
 1. Download Arduino IDE https://github.com/arduino/arduino-ide/releases
 2. Run Arduino IDE Select your chip: ESP32 or any other.
-3. In Arduino IDE, download and install the uBitcoin library.
-4. Replace the installed uBitcoin library with my uBitcoin.zip library (..Documents\Arduino\libraries).
-5. Once all the steps are completed, finally open your bitcoin_puzzle.ino source code in Arduino IDE and safely flash your selected device. 🚀 Let me know if you need any help along the way!
+3. In Arduino IDE, download and install the uBitcoin and ESPAsyncWebServer (from ESP32Async) library.
+4. Replace the installed uBitcoin library with my uBitcoin.zip library (Documents\Arduino\libraries).
+5. Once all the steps are completed, finally open your bitcoin_puzzle.ino source code in Arduino IDE and safely flash your selected device. 🚀
 
 How to use the device after flashing:
 
