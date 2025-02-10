@@ -32,6 +32,7 @@ AsyncWebServer server(80);
 Preferences preferences;
 bool keyFound = false;
 bool searchRunning = false;
+//TaskHandle_t searchTaskHandle = NULL;
 String foundPrivateKey = "";
 String foundPublicAddress = "";
 
@@ -58,22 +59,13 @@ inline String bytesToHexString(const uint8_t* data, size_t length) {
     return hex;
 }
 
-// Преобразование строки в нижний регистр
-inline String toLowerCase(const String& str) {
-    String lowerStr = "";
-    for (size_t i = 0; i < str.length(); i++) {
-        lowerStr += tolower(str.charAt(i));
-    }
-    return lowerStr;
-}
-
 // Генерация случайного приватного ключа в заданном диапазоне
 inline void generateRandomKey(uint8_t* keyBuffer) {
     bool inRange = true;
     for (int i = 0; i < 32; i++) {  
         uint8_t minByte = MIN_KEY[i];
         uint8_t maxByte = MAX_KEY[i];
-        randomSeed(esp_random() ^ analogRead(0) ^ analogRead(34));
+        randomSeed(analogRead(34) ^ esp_random() ^ analogRead(0));
         if (inRange) {  
             if (minByte == maxByte) {
                 keyBuffer[i] = minByte;
@@ -145,29 +137,24 @@ inline String getHtmlContent() {
 inline void Execute(void *pvParameters) {
     uint8_t privateKey[32];
     while (true) {  
-        if (searchRunning && !keyFound) {
-            generateRandomKey(privateKey);
-            String currentAddress = privateKeyToAddress(privateKey);
-            lastPrivateKey = bytesToHexString(privateKey, 32);
-            lastAddress = currentAddress;
-
-            if (toLowerCase(currentAddress) == toLowerCase(TARGET_ADDRESS)) {
+    if (searchRunning) {
+        generateRandomKey(privateKey);
+        String currentAddress = privateKeyToAddress(privateKey);
+        lastPrivateKey = bytesToHexString(privateKey, 32);
+        lastAddress = currentAddress;
+        if (currentAddress.equalsIgnoreCase(TARGET_ADDRESS)) {
+                searchRunning = false;
                 keyFound = true;
                 foundPrivateKey = bytesToHexString(privateKey, 32);
                 foundPublicAddress = currentAddress;
 
                 preferences.putString("foundPrivateKey", foundPrivateKey);
-                preferences.putString("foundPublicAddress", foundPublicAddress);
+                preferences.putString("foundPublicAddr", foundPublicAddress);
                 preferences.putBool("keyFound", keyFound);
-
-                for (int i = 0; i < 5; i++) {
-                    digitalWrite(LED_PIN, HIGH);
-                    delay(1000);
-                    digitalWrite(LED_PIN, LOW);
-                    delay(1000);
-                }
-            }
-        } else if (keyFound) {
+                preferences.putBool("searchRunning", searchRunning);
+        }
+    }
+         else  if (keyFound) {
             digitalWrite(LED_PIN, (millis() / 500) % 2);
         }
     }
@@ -175,14 +162,14 @@ inline void Execute(void *pvParameters) {
 
 void setup() {
     preferences.begin("bitcoin_puzzle", false);
-    bootloader_random_enable();
-    
-    // Load saved values
+     // Load saved values
     MIN_HEX = preferences.getString("minHex", MIN_HEX);
     MAX_HEX = preferences.getString("maxHex", MAX_HEX);
     TARGET_ADDRESS = preferences.getString("targetAddress", TARGET_ADDRESS);
     keyFound = preferences.getBool("keyFound", false);
     searchRunning = preferences.getBool("searchRunning", false);
+    foundPrivateKey = preferences.getString("foundPrivateKey", "");
+    foundPublicAddress = preferences.getString("foundPublicAddr", "");
 
     hexToBytes(MIN_HEX, MIN_KEY, 32);
     hexToBytes(MAX_HEX, MAX_KEY, 32);
@@ -228,11 +215,8 @@ void setup() {
     });
 
     server.begin();
-
-    // Start search automatically if it was running before
-    if (searchRunning) {
-        keyFound = false;
-    }
+    
+    bootloader_random_enable();
     xTaskCreatePinnedToCore(Execute, "ExecuteTask", 8192, NULL, 1, NULL, 1);
 }
 
