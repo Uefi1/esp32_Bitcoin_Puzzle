@@ -34,5 +34,8 @@ Ethereum:
 Tron:
 TYzWLVME4ntG7xxmMnW711Va9qGt53KaiA
 
+Litecoin:
+LRZhvggAd6TEos6JdGg54gmQe9kiFup1g4
+
 Bitcoin Cash:
 qz7jgcy5p77f4llsrhgunpp3yhpq890vdcwajyl2ch
