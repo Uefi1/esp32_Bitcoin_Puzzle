@@ -65,7 +65,7 @@ inline void generateRandomKey(uint8_t* keyBuffer) {
   for (int i = 0; i < 32; i++) {
     uint8_t minByte = MIN_KEY[i];
     uint8_t maxByte = MAX_KEY[i];
-    randomSeed(analogRead(34) ^ esp_random() ^ analogRead(0));
+    randomSeed(analogRead(15) ^ esp_random() ^ analogRead(27));
     if (inRange) {
       if (minByte == maxByte) {
         keyBuffer[i] = minByte;
